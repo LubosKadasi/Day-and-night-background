@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sun Position Control</title>
+  <style>
+    html {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+      background-color: rgb(0, 19, 26);
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .sky {
+      /*outline: 10px solid red;*/
+      position: absolute;
+      width: 200%;
+      height: 250%;
+      transform: translate(-50%, -50%);
+      transform-origin: center;
+      background-image: radial-gradient(transparent, rgba(0, 19, 26, .8)), linear-gradient(0deg, rgb(0, 191, 255) 50%, rgba(0, 191, 255, 0) 80%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+
+    }
+
+    .sun {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10vw;
+      height: 10vw;
+      background-color: yellow;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transform-origin: center;
+      box-shadow: 0 0 250px 150px rgba(255, 255, 255, .75);
+    }
+
+    /* JavaScript will dynamically update these values */
+    /* Example of how to combine elevation and azimuth classes */
+    .sky.elevation {
+      top: calc((1 - var(--elevation) / 90) * 100vh);
+    }
+
+    .sky.azimuth {
+      left: calc((var(--azimuth) / 360) * 100vw);
+    }
+
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sky elevation azimuth" style="--elevation: 45; --azimuth: 180;">
+    <div class="sun"></div>
+  </div>
+
+  <div id="controls">
+    <label for="elevationRange">Elevation:</label>
+    <input type="range" id="elevationRange" min="-90" max="90" value="15" onchange="updateSunPosition()">
+    <span id="elevationValue">45</span><br>
+
+    <label for="azimuthRange">Azimuth:</label>
+    <input type="range" id="azimuthRange" min="0" max="360" value="180" onchange="updateSunPosition()">
+    <span id="azimuthValue">180</span>
+  </div>
+
+  <script>
+    const sunCircle = document.querySelector('.sky');
+    const elevationRange = document.getElementById('elevationRange');
+    const azimuthRange = document.getElementById('azimuthRange');
+    const elevationValue = document.getElementById('elevationValue');
+    const azimuthValue = document.getElementById('azimuthValue');
+
+    function updateSunPosition() {
+      const elevation = elevationRange.value;
+      const azimuth = azimuthRange.value;
+
+      sunCircle.style.setProperty('--elevation', elevation);
+      sunCircle.style.setProperty('--azimuth', azimuth);
+
+      elevationValue.textContent = elevation;
+      azimuthValue.textContent = azimuth;
+    }
+
+    elevationRange.addEventListener('input', updateSunPosition);
+    azimuthRange.addEventListener('input', updateSunPosition);
+
+    //Initial update
+    updateSunPosition();
+
+  </script>
+</body>
+
+</html>
